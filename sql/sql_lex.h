@@ -2519,6 +2519,8 @@ class Query_tables_list {
   Sroutine_hash_entry **sroutines_list_own_last;
   uint sroutines_list_own_elements;
 
+  std::string layer_name;
+
   /**
     Locking state of tables in this particular statement.
 

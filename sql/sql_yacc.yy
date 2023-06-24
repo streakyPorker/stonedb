@@ -13621,11 +13621,31 @@ show_engine_mutex_stmt:
           }
         ;
 
+
 show_engine_status_stmt:
-          SHOW ENGINE_SYM engine_or_all STATUS_SYM
+          SHOW ENGINE_SYM engine_or_all opt_layer_table_spec STATUS_SYM
           {
             $$ = NEW_PTN PT_show_engine_status(@$, $3);
           }
+        ;
+
+opt_layer_table_spec:
+    	 /* empty */  {}
+        | layer_spec opt_table_list
+		// opt_table_list这个语法段包含0或多个table，
+		// 并在解析每个table时调用current_select的add_table_to_list,
+    	// 将其加入current_select的table_list中
+		  {}
+         ;
+
+layer_spec:
+    	 ident
+         {
+              // 此处设计较为简单，可能实际实现需要考虑更多情况
+              // 将layer名解析到Lex中，layer_name是本功能拟新增的字段
+             Lex->layer_name = {$1.str,$1.length};
+             $$ = $1;
+         }
         ;
 
 show_columns_stmt:
